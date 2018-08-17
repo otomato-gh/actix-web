@@ -11,5 +11,5 @@ COPY ./templates ./templates
 RUN cargo clean && cargo build --release
 
 from bitnami/minideb:stretch
-copy --from=build /builddir/target/release/template-tera /app
+copy --from=build /builddir/target/release/actix-web /app
 cmd /app
