@@ -48,7 +48,7 @@ fn main() {
             // enable logger
             .middleware(middleware::Logger::default())
             .resource("/", |r| r.method(http::Method::GET).with(index))
-    }).bind("127.0.0.1:8080")
+    }).bind("0.0.0.0:8080")
         .unwrap()
         .start();
 
