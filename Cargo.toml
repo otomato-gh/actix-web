@@ -1,7 +1,7 @@
 [package]
-name = "actix-web"
+name = "{{project-name}}"
 version = "0.1.0"
-authors = ["Ant Weiss <anton@otomato.link>"]
+authors = ["{{authors}}"]
 
 [dependencies]
 env_logger = "0.5"

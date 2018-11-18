@@ -14,31 +14,19 @@ struct AppState {
     template: tera::Tera, // <- store tera template in application state
 }
 
-fn index(
-    (state, query): (State<AppState>, Query<HashMap<String, String>>),
-) -> Result<HttpResponse, Error> {
-    let s = if let Some(name) = query.get("name") {
-        // <- submitted form
-        let mut ctx = tera::Context::new();
-        ctx.insert("name", &name.to_owned());
-        ctx.insert("text", &"Welcome!".to_owned());
-        state
-            .template
-            .render("user.html", &ctx)
-            .map_err(|_| error::ErrorInternalServerError("Template error"))?
-    } else {
-        state
-            .template
-            .render("index.html", &tera::Context::new())
-            .map_err(|_| error::ErrorInternalServerError("Template error"))?
-    };
+fn index((state, _query): (State<AppState>, Query<HashMap<String, String>>),) -> Result<HttpResponse, Error> {
+    let s = state
+        .template
+        .render("index.html", &tera::Context::new())
+        .map_err(|_| error::ErrorInternalServerError("Template error"))?;
+    
     Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }
 
 fn main() {
-    ::std::env::set_var("RUST_LOG", "actix_web=info");
+    ::std::env::set_var("RUST_LOG", "{{project-name}}=info");
     env_logger::init();
-    let sys = actix::System::new("tera-example");
+    let sys = actix::System::new("{{project-name}}");
 
     server::new(|| {
         let tera =
@@ -48,10 +36,10 @@ fn main() {
             // enable logger
             .middleware(middleware::Logger::default())
             .resource("/", |r| r.method(http::Method::GET).with(index))
-    }).bind("0.0.0.0:8080")
+    }).bind("127.0.0.1:8080")
         .unwrap()
         .start();
 
-    println!("Started http server: 0.0.0.0:8080");
+    println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();
 }
