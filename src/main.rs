@@ -20,8 +20,8 @@ fn index(
     let s = if let Some(name) = query.get("name") {
         // <- submitted form
         let mut ctx = tera::Context::new();
-        ctx.add("name", &name.to_owned());
-        ctx.add("text", &"Welcome!".to_owned());
+        ctx.insert("name", &name.to_owned());
+        ctx.insert("text", &"Welcome!".to_owned());
         state
             .template
             .render("user.html", &ctx)
@@ -52,6 +52,6 @@ fn main() {
         .unwrap()
         .start();
 
-    println!("Started http server: 127.0.0.1:8080");
+    println!("Started http server: 0.0.0.0:8080");
     let _ = sys.run();
 }
